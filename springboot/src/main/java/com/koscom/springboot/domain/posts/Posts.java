@@ -30,4 +30,12 @@ public class Posts {
         this.author = author;
         //id가 없고 나머지 필드만 있는 생성자
     }
+
+    //update에는 title과 content만 수정 가능하다
+    //author는 수정 가능하지 않다
+    //수정일자도 신규로 생성된다
+    public void update(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
 }
