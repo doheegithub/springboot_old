@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -76,6 +77,34 @@ public class PostsServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getTitle()).isEqualTo(title);
         assertThat(result.get(0).getContent()).isEqualTo(content);
+    }
+
+    @Test
+    void posts룰_수정하면_수정시간이_갱신된다(){
+
+        //미리 저장된 값을 하나 생성
+        Posts save = postRepository.save(Posts.builder()
+                .title("1")
+                .content("2")
+                .build());
+
+        LocalDateTime beforeTime = save.getModifiedDate();
+        System.out.println("beforeTime:::"+beforeTime);
+
+
+        PostsUpdateRequestDto dto =PostsUpdateRequestDto.builder()
+                .title("test")
+                .content("test2")
+                .build();
+
+        postService.update(save.getId(),dto);
+
+        List<Posts> result = postRepository.findAll();
+        LocalDateTime newTime = result.get(0).getModifiedDate();
+
+        System.out.println("newTime=="+newTime);
+        assertThat(newTime).isAfter(beforeTime);
+
     }
 
 }
